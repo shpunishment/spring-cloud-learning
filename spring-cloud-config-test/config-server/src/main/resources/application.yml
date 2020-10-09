@@ -1,0 +1,33 @@
+
+server:
+  port: 8200
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          # 配置存储配置信息的Git仓库
+          uri: https://gitee.com/XXXX/XXXX.git
+          username: XXX
+          password: XXX
+          # 启动后直接从git获取配置
+          clone-on-start: true
+          # 获取子目录下的配置
+#          search-paths: '{application}'
+
+  security:
+    user:
+      # 配置用户名和密码
+      name: admin
+      password: admin
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8100/eureka

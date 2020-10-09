@@ -1,0 +1,35 @@
+
+server:
+  port: 8300
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    # config客户端配置
+    config:
+      # 分支名称
+      label: master
+      # 启用配置后缀名称
+      profile: dev
+      # 配置文件名称
+      name: user-service
+      # config-sever集群搭建
+      discovery:
+        enabled: true
+        service-id: config-server
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8100/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启refresh端点
+        include: 'refresh'
