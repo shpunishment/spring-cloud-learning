@@ -1,0 +1,92 @@
+
+server:
+  port: 8200
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8100/eureka
+
+spring:
+  application:
+    name: api-gateway
+#  redis:
+#    host: localhost
+#    password:
+#    port: 6379
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          #开启从注册中心动态创建路由的功能
+          enabled: true
+          #使用小写服务名，默认是大写
+          lower-case-service-id: true
+      routes:
+        # 路由的ID
+        - id: path_route_1
+          # 匹配后路由地址
+          uri: http://localhost:8101/api/user/{id}
+          predicates:
+          # 断言，路径相匹配的进行路由
+          - Path=/api/user/{id}
+#        - id: path_route_2
+#          uri: http://localhost:8101/api/user/**
+#          predicates:
+#            - Path=/api/user/**
+#        - id: hystrix_route
+#          uri: http://localhost:8101/api/user/{id}
+#          predicates:
+#            - Path=/api/user/{id}
+#          filters:
+#            - name: Hystrix
+#              args:
+#                name: fallback
+#                fallback-uri: forward:/fallback
+#        - id: request_rate_limiter_route
+#          uri: http://localhost:8101
+#          predicates:
+#            - Path=/api/user/{id}
+#          filters:
+#            - name: RequestRateLimiter
+#              args:
+#                # 每秒允许处理的请求数量
+#                redis-rate-limiter.replenishRate: 1
+#                # 每秒最大处理的请求数量
+#                redis-rate-limiter.burstCapacity: 2
+#                # 限流策略，对应策略的Bean
+#                key-resolver: "#{@ipKeyResolver}"
+#        - id: retry_route
+#          uri: http://localhost:8101/api/user/{id}
+#          predicates:
+#            - Path=/api/user/{id}
+#          filters:
+#            - name: Retry
+#              args:
+#                # 需要进行重试的次数
+#                retries: 1
+#                # 返回哪个状态码需要进行重试，返回状态码为5XX进行重试
+#                statuses: INTERNAL_SERVER_ERROR
+#        - id: prefixpath_route
+#          #此处需要使用lb协议
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/**
+#          filters:
+#            - name: Hystrix
+#              args:
+#                name: fallback
+#                fallback-uri: forward:/fallback
+
+service-url:
+  user-service: http://localhost:8101
+
+logging:
+   level:
+     org.springframework.cloud.gateway: TRACE
+     org.springframework.http.server.reactive: DEBUG
+     org.springframework.web.reactive: DEBUG
+     reactor.ipc.netty: DEBUG
