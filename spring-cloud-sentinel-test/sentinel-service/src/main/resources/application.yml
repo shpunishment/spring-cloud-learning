@@ -1,0 +1,44 @@
+
+server:
+  port: 8200
+
+spring:
+  application:
+    name: sentinel-service
+  cloud:
+    nacos:
+      # nacos地址
+      server-addr: http://192.168.110.40:8848
+    sentinel:
+      # 取消Sentinel控制台懒加载
+      eager: true
+      transport:
+        # Sentinel 控制台地址
+        dashboard: http://192.168.110.40:8400
+        # 当前服务运行的ip
+        client-ip: 192.168.4.23
+        port: 8719
+      # 添加Nacos数据源配置
+      datasource:
+        ds1-nacos:
+          nacos:
+            server-addr: 192.168.110.40:8848
+            username: nacos
+            password: nacos
+            namespace: public
+            dataId: ${spring.application.name}
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+
+feign:
+  sentinel:
+    # 开启Sentinel
+    enabled: true
+
+service-url:
+  user-service: http://user-service
+
+logging:
+  level:
+    com.shpun: debug
