@@ -1,0 +1,81 @@
+
+server:
+  port: 8200
+
+spring:
+  application:
+    name: openfeign-service
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8100/eureka/
+
+feign:
+  hystrix:
+    # 开启Hystrix
+    enabled: true
+  compression:
+    request:
+      # 是否对请求进行GZIP压缩
+      enabled: false
+      # 指定压缩的请求数据类型
+      mime-types: text/xml,application/xml,application/json
+      # 超过该大小的请求会被压缩
+      min-request-size: 2048
+    response:
+      # 是否对响应进行GZIP压缩
+      enabled: false
+  client:
+    config:
+      # 全局配置，可以指定具体应用名
+      default:
+        # 连接超时
+        connectTimeout: 5000
+        # 读取超时
+        readTimeout: 5000
+        # 指定feign日志级别
+        loggerLevel: full
+
+# 全局配置
+ribbon:
+  # 服务请求连接超时时间（毫秒）
+  ConnectTimeout: 1000
+  # 服务请求处理超时时间（毫秒）
+  ReadTimeout: 3000
+  # 对超时请求启用重试机制
+  OkToRetryOnAllOperations: true
+  # 切换重试实例的最大个数
+  MaxAutoRetriesNextServer: 1
+  # 切换实例后重试最大次数
+  MaxAutoRetries: 1
+  # 修改负载均衡算法
+  NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+# 指定应用进行配置
+user-service:
+  ribbon:
+    ConnectTimeout: 1000
+    ReadTimeout: 3000
+    OkToRetryOnAllOperations: true
+    MaxAutoRetriesNextServer: 1
+    MaxAutoRetries: 1
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            # HystrixCommand 执行的超时时间，执行超过该时间会进行服务降级处理
+            timeoutInMilliseconds: 1000
+
+logging:
+  level:
+    com.shpun: debug

@@ -1,0 +1,29 @@
+
+server:
+  port: 8100
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  instance:
+    hostname: localhost
+    #心跳时间，即服务续约间隔时间
+    lease-renewal-interval-in-seconds: 1
+    #没有心跳的淘汰时间
+    lease-expiration-duration-in-seconds: 1
+  server:
+    #状态刷新时间间隔毫秒
+    peer-eureka-status-refresh-time-interval-ms: 10000
+    #自我保护模式，设置改参数值为false，以确保注册中心将不可用的实例删除，测试环境可设置为false
+    enable-self-preservation: false
+    #扫描失效服务的间隔时间
+    eviction-interval-timer-in-ms: 1000
+    #缓存
+    use-read-only-response-cache: false
+  client:
+    # 是否从注册中心获取服务（注册中心不需要开启）
+    register-with-eureka: false
+    # 是否将服务注册到注册中心（注册中心不需要开启）
+    fetch-registry: false
