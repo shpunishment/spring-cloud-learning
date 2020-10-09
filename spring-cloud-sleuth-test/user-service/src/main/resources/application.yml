@@ -1,0 +1,36 @@
+
+server:
+  port: 8101
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:4306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+
+  sleuth:
+    sampler:
+      # 采样请求的概率
+      probability: 0.1
+  # 整合Zipkin
+  zipkin:
+    base-url: http://localhost:9411
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8100/eureka
+
+mybatis:
+  typeAliasesPackage: com.shpun.model
+  mapper-locations: classpath:mapper/**.xml
+
+logging:
+  level:
+    com.shpun: debug
