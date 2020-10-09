@@ -1,0 +1,17 @@
+
+server:
+  port: 8300
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    nacos:
+      discovery:
+        # nacos地址
+        server-addr: http://192.168.110.40:8848
+      config:
+        # nacos地址
+        server-addr: http://192.168.110.40:8848
+        # 获取的yaml格式的配置
+        file-extension: yaml
