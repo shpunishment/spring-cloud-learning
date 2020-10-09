@@ -1,0 +1,80 @@
+
+server:
+  port: 8200
+
+spring:
+  application:
+    name: hystrix-service
+
+eureka:
+  instance:
+    # 是否优先使用ip来作为主机名
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8100/eureka/
+
+service-url:
+  user-service: http://user-service/
+
+hystrix:
+  # 控制 HystrixCommand
+  command:
+    default:
+      execution:
+        isolation:
+          # HystrixCommand 隔离策略，THREAD 线程池隔离策略(默认)，SEMAPHORE 信号量隔离策略
+          strategy: THREAD
+          thread:
+            # HystrixCommand 执行的超时时间，执行超过该时间会进行服务降级处理
+            timeoutInMilliseconds: 1000
+            # HystrixCommand 执行超时的时候是否要中断
+            interruptOnTimeout: true
+            # HystrixCommand 执行被取消的时候是否要中断
+            interruptOnCancel: true
+          timeout:
+            # HystrixCommand 执行是否启用超时时间
+            enabled: true
+          semaphore:
+            # 当使用信号量隔离策略时，用来控制并发量的大小，超过该并发量的请求会被拒绝
+            maxConcurrentRequests: 10
+      fallback:
+        # 是否启用服务降级
+        enabled: true
+      # 控制 HystrixCircuitBreaker
+      circuitBreaker:
+        # 是否跟踪健康状况以及熔断请求
+        enabled: true
+        # 超过该请求数的请求会被拒绝
+        requestVolumeThreshold: 20
+        # 强制打开断路器，拒绝所有请求
+        forceOpen: false
+        # 强制关闭断路器，接收所有请求
+        forceClosed: false
+      requestCache:
+        # 是否开启请求缓存
+        enabled: true
+  # 控制 HystrixCollapser
+  collapser:
+    default:
+      # 控制一次合并请求合并的最大请求数
+      maxRequestsInBatch: 100
+      # 控制多少毫秒内的请求会被合并成一个
+      timerDelayinMilliseconds: 10
+      requestCache:
+        # 合并请求是否开启缓存
+        enabled: true
+  # 控制 HystrixCommand 执行所在线程池
+  threadpool:
+    # 默认。可以设置key，对特定的请求进行控制
+    default:
+      # 线程池的核心线程数
+      coreSize: 10
+      # 线程池的最大线程数，超过该线程数的请求会被拒绝
+      maximumSize: 10
+      # 线程池的最大队列大小，-1 SynchronousQueue，其他正数 LinkedBlockingQueue
+      maxQueueSize: -1
+      # 线程池队列的拒绝阀值，由于LinkedBlockingQueue不能动态改版大小，使用时需要用该参数来控制线程数
+      queueSizeRejectionThreshold: 5
