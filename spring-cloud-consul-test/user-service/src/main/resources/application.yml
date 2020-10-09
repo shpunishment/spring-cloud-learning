@@ -1,0 +1,29 @@
+
+server:
+  port: 8101
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:4306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+  cloud:
+    consul:
+      # 将服务注册到consul
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        # 指定主机名，防止主机名出现不规范字符
+        hostname: localhost
+
+mybatis:
+  typeAliasesPackage: com.shpun.model
+  mapper-locations: classpath:mapper/**.xml
+
+logging:
+  level:
+    com.shpun: debug
